@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AndroidNanoDegreeProject6.iml" filepath="$PROJECT_DIR$/AndroidNanoDegreeProject6.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sunshinewear/sunshinewear.iml" filepath="$PROJECT_DIR$/sunshinewear/sunshinewear.iml" />
     </modules>
   </component>
 </project>
