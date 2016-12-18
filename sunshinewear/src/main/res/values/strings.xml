@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">SunshineWear</string>
     <string name="message">Watch face tapped</string>
-    <string name="my_watchface_name">MySunshine Face</string>
+    <string name="my_watchface_name">MySunshine Face</string>\
+    <string name="weather_data">/weather_data</string>
+    <string name="high_temp">high_temp</string>
+    <string name="low_temp">low_temp</string>
+    <string name="weahter_icon_id">weahter_icon_id</string>
+    <string name="weather_updated">weather_updated</string>
 </resources>

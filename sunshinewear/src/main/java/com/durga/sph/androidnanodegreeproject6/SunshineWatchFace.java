@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.durga.sph.sunshinewear;
+package com.durga.sph.androidnanodegreeproject6;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,20 +23,13 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.graphics.Palette;
 import android.support.wearable.watchface.CanvasWatchFaceService;
-import android.support.wearable.watchface.WatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
-import android.text.format.DateFormat;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.Display;
@@ -47,16 +40,20 @@ import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.Wearable;
+import com.google.android.gms.wearable.WearableListenerService;
+
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-import static com.durga.sph.sunshinewear.Constants.getWeekDay;
+import static com.durga.sph.androidnanodegreeproject6.Constants.getWeekDay;
 
 /**
  * Analog watch face with a ticking second hand. In ambient mode, the second hand isn't
@@ -112,6 +109,19 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 invalidate();
             }
         };
+
+        private final BroadcastReceiver mWeatherUpdateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                Log.d("this", intent.getAction() + ", intent...");
+                if(intent.getAction().equals(getResources().getString(R.string.weather_updated))) {
+                    detail_high_textview.setText(intent.getStringExtra(getResources().getString(R.string.high_temp)));
+                    detail_low_textview.setText(intent.getStringExtra(getResources().getString(R.string.low_temp)));
+                    detail_icon.setImageBitmap((Bitmap) intent.getParcelableExtra(getResources().getString(R.string.weahter_icon_id)));
+                    invalidate();
+                }
+            }
+        };
         private boolean mRegisteredTimeZoneReceiver = false;
 
         private boolean mAmbient;
@@ -134,7 +144,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
-
+            WeatherListenerService mobileListenerService = new WeatherListenerService();
             setWatchFaceStyle(new WatchFaceStyle.Builder(SunshineWatchFace.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
                     .setBackgroundVisibility(WatchFaceStyle.BACKGROUND_VISIBILITY_INTERRUPTIVE)
@@ -223,7 +233,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             detail_date_textview.setText(getWeekDay(mTime.weekDay) + ", " + df.format(new Date()));
             mView.measure(specW, specH);
             mView.layout(0, 0, mView.getMeasuredWidth(), mView.getMeasuredHeight());
-            canvas.drawColor(getResources().getColor(R.color.primary));
+            canvas.drawColor(getResources().getColor(R.color.accent));
             canvas.translate(mXOffset, mYOffset);
             mView.draw(canvas);
         }

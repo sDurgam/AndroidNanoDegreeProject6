@@ -1,11 +1,11 @@
-package com.durga.sph.sunshinewear;
+package com.durga.sph.androidnanodegreeproject6;
 
 /**
  * Created by root on 12/12/16.
  */
 
 public class Constants {
-    public static final String WEARABLE_DATA = "/wearable_data";
+    public static final String WEARABLE_DATA = "/weather_data";
 
     public static String getWeekDay(int day)
     {

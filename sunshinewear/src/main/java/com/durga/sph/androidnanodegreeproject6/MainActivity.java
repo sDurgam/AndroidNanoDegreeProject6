@@ -1,7 +1,6 @@
-package com.durga.sph.sunshinewear;
+package com.durga.sph.androidnanodegreeproject6;
 
 import android.app.Activity;
-import android.app.TaskStackBuilder;
 import android.os.Bundle;
 
 /**
