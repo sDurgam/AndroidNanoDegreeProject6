@@ -7,4 +7,6 @@
     <string name="low_temp">low_temp</string>
     <string name="weahter_icon_id">weahter_icon_id</string>
     <string name="weather_updated">weather_updated</string>
+    <string name="weather_to_data_path">/weather_data</string>
+    <string name="weather_from_msg_path">/path/weather</string>
 </resources>

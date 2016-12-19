@@ -36,7 +36,7 @@ public class WeatherListenerService extends WearableListenerService implements G
     @Override
     public void onCreate() {
         super.onCreate();
-        mGoogleApiClient = new GoogleApiClient.Builder(this).addApi(Wearable.API).build();
+        mGoogleApiClient = new GoogleApiClient.Builder(getApplicationContext()).addApi(Wearable.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
         mGoogleApiClient.connect();
     }
 
@@ -50,7 +50,7 @@ public class WeatherListenerService extends WearableListenerService implements G
                 DataMap dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                 String path = event.getDataItem().getUri().getPath();
                 Log.d("Mysunshine watch face", "sunshinepath:" + path);
-                if(path.equals(Constants.WEARABLE_DATA)) {
+                if(path.equals(getResources().getString(R.string.weather_to_data_path))) {
                     Bitmap bitmap = loadBitmapFromAsset(dataMap.getAsset(getResources().getString(R.string.weahter_icon_id)));
                     String highTemp = dataMap.getString(getResources().getString(R.string.high_temp));
                     String lowTemp = dataMap.getString(getResources().getString(R.string.low_temp));

@@ -29,6 +29,9 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.Time;
@@ -43,14 +46,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.ResultCallbacks;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.wearable.Asset;
+import com.google.android.gms.wearable.MessageApi;
+import com.google.android.gms.wearable.Node;
+import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Constructor;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -99,7 +112,8 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         }
     }
 
-    private class Engine extends CanvasWatchFaceService.Engine {
+    private class Engine extends CanvasWatchFaceService.Engine  implements
+            GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
         /* Handler to update the time once a second in interactive mode. */
         private final Handler mUpdateTimeHandler = new EngineHandler(this);
@@ -139,10 +153,16 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         ImageView detail_icon;
         TextView detail_high_textview;
         TextView detail_low_textview;
+        GoogleApiClient mGoogleApiClient;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
+            mGoogleApiClient = new GoogleApiClient.Builder(SunshineWatchFace.this)
+                    .addApi(Wearable.API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
             WeatherListenerService mobileListenerService = new WeatherListenerService();
             setWatchFaceStyle(new WatchFaceStyle.Builder(SunshineWatchFace.this)
                     .setCardPeekMode(WatchFaceStyle.PEEK_MODE_SHORT)
@@ -163,11 +183,15 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             detail_icon = (ImageView) mView.findViewById(R.id.detail_icon);
             detail_high_textview = (TextView) mView.findViewById(R.id.detail_high_textview);
             detail_low_textview = (TextView) mView.findViewById(R.id.detail_low_textview);
+            getConnectedNode();
         }
 
         @Override
         public void onDestroy() {
             mUpdateTimeHandler.removeMessages(MSG_UPDATE_TIME);
+            if(mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+                mGoogleApiClient.disconnect();
+            }
             super.onDestroy();
         }
 
@@ -272,6 +296,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             SunshineWatchFace.this.registerReceiver(mTimeZoneReceiver, filter);
             IntentFilter wetherUpdateFilter = new IntentFilter(getResources().getString(R.string.weather_updated));
             SunshineWatchFace.this.registerReceiver(mWeatherUpdateReceiver, wetherUpdateFilter);
+            mGoogleApiClient.connect();
         }
 
         private void unregisterReceiver() {
@@ -281,6 +306,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mRegisteredTimeZoneReceiver = false;
             SunshineWatchFace.this.unregisterReceiver(mTimeZoneReceiver);
             SunshineWatchFace.this.unregisterReceiver(mWeatherUpdateReceiver);
+            if(mGoogleApiClient != null && mGoogleApiClient.isConnected()){
+                mGoogleApiClient.disconnect();
+            }
         }
 
         /**
@@ -312,6 +340,64 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                         - (timeMs % INTERACTIVE_UPDATE_RATE_MS);
                 mUpdateTimeHandler.sendEmptyMessageDelayed(MSG_UPDATE_TIME, delayMs);
             }
+        }
+
+        @Override
+        public void onConnected(@Nullable Bundle bundle) {
+
+        }
+
+        @Override
+        public void onConnectionSuspended(int i) {
+
+        }
+
+        @Override
+        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+        }
+
+        private void getConnectedNode()
+        {
+            Runnable sendData = new Runnable() {
+                @Override
+                public void run() {
+                    final PendingResult<NodeApi.GetConnectedNodesResult> nodes = Wearable.NodeApi.getConnectedNodes(mGoogleApiClient);
+                    nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
+                        @Override
+                        public void onResult(@NonNull NodeApi.GetConnectedNodesResult getConnectedNodesResult) {
+                            Log.d(getClass().getName(), "received nodes");
+                            getConnectedNodeId(getConnectedNodesResult.getNodes());
+                        }
+                    });
+                }
+                };
+                Handler handler = new Handler();
+                handler.post(sendData);
+        }
+
+        private void getConnectedNodeId(List<Node> nodes) {
+            String bestNodeId = null;
+            for(Node node : nodes){
+                if(node.isNearby()){
+                    bestNodeId = node.getId();
+                    break;
+                }
+                bestNodeId = node.getId();
+            }
+            Log.d(getClass().getName(), "bestnodeid:" + bestNodeId);
+            sendMessage(bestNodeId);
+        }
+
+        public void sendMessage(String nodeId){
+            Wearable.MessageApi.sendMessage(mGoogleApiClient, nodeId, getResources().getString(R.string.weather_from_msg_path), new byte[0]).setResultCallback(new ResultCallback<MessageApi.SendMessageResult>() {
+                @Override
+                public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
+                    if(!sendMessageResult.getStatus().isSuccess()){
+                        Log.d(this.getClass().getName(), "Could not send message to mobile");
+                    }
+                }
+            });
         }
     }
 }

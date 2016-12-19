@@ -229,6 +229,8 @@
     <string name="weather_data">/weather_data</string>
     <string name="high_temp">high_temp</string>
     <string name="low_temp">low_temp</string>
+    <string name="short_desc">short_desc</string>
+    <string name="time">time</string>
     <string name="weahter_icon_id">weahter_icon_id</string>
-
+    <string name="weather_from_msg_path">/path/weather</string>
 </resources>

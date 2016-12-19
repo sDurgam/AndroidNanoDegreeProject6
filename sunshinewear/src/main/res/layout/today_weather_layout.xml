@@ -32,41 +32,41 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="8dp">
-    <ImageView
-        android:id="@+id/detail_icon"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:adjustViewBounds="true"
-        android:maxHeight="@dimen/today_icon"
-        android:maxWidth="@dimen/today_icon"
-        android:src="@drawable/art_clear" />
+        <ImageView
+            android:id="@+id/detail_icon"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:adjustViewBounds="true"
+            android:maxHeight="@dimen/today_icon"
+            android:maxWidth="@dimen/today_icon"
+            android:src="@drawable/art_clear" />
 
-    <TextView
-        android:id="@+id/detail_high_textview"
-        android:maxHeight="@dimen/today_icon"
-        android:maxWidth="@dimen/today_icon"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:fontFamily="sans-serif-light"
-        android:gravity="center_horizontal"
-        android:textColor="@color/secondary_text"
-        android:textSize="32sp"
-        android:text="19"
-        android:textStyle="bold"/>
-    <TextView
-        android:id="@+id/detail_low_textview"
-        android:maxHeight="@dimen/today_icon"
-        android:maxWidth="@dimen/today_icon"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_width="0dp"
-        android:fontFamily="sans-serif-light"
-        android:gravity="center_horizontal"
-        android:textColor="@color/secondary_text"
-        android:textSize="32sp"
-        android:text="10" />
+        <TextView
+            android:id="@+id/detail_high_textview"
+            android:maxHeight="@dimen/today_icon"
+            android:maxWidth="@dimen/today_icon"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_horizontal"
+            android:textColor="@color/secondary_text"
+            android:textSize="32sp"
+            android:text="19"
+            android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/detail_low_textview"
+            android:maxHeight="@dimen/today_icon"
+            android:maxWidth="@dimen/today_icon"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center_horizontal"
+            android:textColor="@color/secondary_text"
+            android:textSize="32sp"
+            android:text="10" />
     </LinearLayout>
 
 </LinearLayout>
