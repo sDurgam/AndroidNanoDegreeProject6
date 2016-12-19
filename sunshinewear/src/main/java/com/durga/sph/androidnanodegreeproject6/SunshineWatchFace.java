@@ -23,6 +23,7 @@ import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -223,15 +224,26 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
 
         @Override
         public void onDraw(Canvas canvas, Rect bounds) {
-            mTime.setToNow();
-
-            SimpleDateFormat df = new SimpleDateFormat("MMM dd yyyy");
-            detail_time_textview.setText(mTime.hour + ":" + mTime.minute);
-            detail_date_textview.setText(getWeekDay(mTime.weekDay) + ", " + df.format(new Date()));
-            mView.measure(specW, specH);
-            mView.layout(0, 0, mView.getMeasuredWidth(), mView.getMeasuredHeight());
-            canvas.drawColor(getResources().getColor(R.color.primary));
-            canvas.translate(mXOffset, mYOffset);
+            if(isInAmbientMode()){
+                detail_icon.setVisibility(View.INVISIBLE);
+                detail_high_textview.setVisibility(View.INVISIBLE);
+                detail_low_textview.setVisibility(View.INVISIBLE);
+                canvas.drawColor(Color.BLACK);
+            }
+            else {
+                mTime.setToNow();
+                SimpleDateFormat df = new SimpleDateFormat("MMM dd yyyy");
+                detail_icon.setVisibility(View.VISIBLE);
+                detail_high_textview.setVisibility(View.VISIBLE);
+                detail_low_textview.setVisibility(View.VISIBLE);
+                detail_time_textview.setText(mTime.hour + ":" + mTime.minute);
+                detail_date_textview.setText(getWeekDay(mTime.weekDay) + ", " + df.format(new Date()));
+                mView.measure(specW, specH);
+                mView.layout(0, 0, mView.getMeasuredWidth(), mView.getMeasuredHeight());
+                mView.setVisibility(View.VISIBLE);
+                canvas.drawColor(getResources().getColor(R.color.primary));
+                canvas.translate(mXOffset, mYOffset);
+            }
             mView.draw(canvas);
         }
 
