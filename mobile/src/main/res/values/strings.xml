@@ -233,4 +233,5 @@
     <string name="time">time</string>
     <string name="weahter_icon_id">weahter_icon_id</string>
     <string name="weather_from_msg_path">/path/weather</string>
+    <string name="messageapisuccess">Message received from wear</string>
 </resources>

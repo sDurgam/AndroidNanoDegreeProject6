@@ -9,4 +9,7 @@
     <string name="weather_updated">weather_updated</string>
     <string name="weather_to_data_path">/weather_data</string>
     <string name="weather_from_msg_path">/path/weather</string>
+    <string name="messageapierror">Could not send message to mobile</string>
+    <string name="assetreceiveerror">Requested an unknown Asset.</string>
+    <string name="assetnullerror">Asset must not be null</string>
 </resources>

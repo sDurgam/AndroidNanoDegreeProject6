@@ -56,7 +56,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
         if(messageEvent.getPath().equals(getResources().getString(R.string.weather_from_msg_path))){
-            Log.d(getClass().getName(), "Message received from wear");
+            Log.d(getClass().getName(), getResources().getString(R.string.messageapisuccess));
             notifyWearable();
         }
     }

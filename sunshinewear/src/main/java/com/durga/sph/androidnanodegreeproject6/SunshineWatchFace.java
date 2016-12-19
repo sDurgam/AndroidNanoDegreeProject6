@@ -219,12 +219,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         }
 
         private void updateWatchHandStyle() {
-            if (mAmbient) {
-
-
-            } else {
-
-            }
         }
 
         @Override
@@ -366,7 +360,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                     nodes.setResultCallback(new ResultCallback<NodeApi.GetConnectedNodesResult>() {
                         @Override
                         public void onResult(@NonNull NodeApi.GetConnectedNodesResult getConnectedNodesResult) {
-                            Log.d(getClass().getName(), "received nodes");
                             getConnectedNodeId(getConnectedNodesResult.getNodes());
                         }
                     });
@@ -385,7 +378,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 }
                 bestNodeId = node.getId();
             }
-            Log.d(getClass().getName(), "bestnodeid:" + bestNodeId);
             sendMessage(bestNodeId);
         }
 
@@ -394,7 +386,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 @Override
                 public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
                     if(!sendMessageResult.getStatus().isSuccess()){
-                        Log.d(this.getClass().getName(), "Could not send message to mobile");
+                        Log.d(this.getClass().getName(), getResources().getString(R.string.messageapierror));
                     }
                 }
             });

@@ -45,11 +45,9 @@ public class WeatherListenerService extends WearableListenerService implements G
         super.onDataChanged(dataEventBuffer);
         for(DataEvent event : dataEventBuffer)
         {
-            Log.d(getPackageName(), "from mobile data" + String.valueOf(event.getType()));
             if(event.getType() == DataEvent.TYPE_CHANGED) {
                 DataMap dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                 String path = event.getDataItem().getUri().getPath();
-                Log.d("Mysunshine watch face", "sunshinepath:" + path);
                 if(path.equals(getResources().getString(R.string.weather_to_data_path))) {
                     Bitmap bitmap = loadBitmapFromAsset(dataMap.getAsset(getResources().getString(R.string.weahter_icon_id)));
                     String highTemp = dataMap.getString(getResources().getString(R.string.high_temp));
@@ -82,7 +80,7 @@ public class WeatherListenerService extends WearableListenerService implements G
 
     public Bitmap loadBitmapFromAsset(Asset asset) {
         if (asset == null) {
-            throw new IllegalArgumentException("Asset must be non-null");
+            throw new IllegalArgumentException(getResources().getString(R.string.assetnullerror));
         }
         ConnectionResult result =
                 mGoogleApiClient.blockingConnect(TIMEOUT_MS, TimeUnit.MILLISECONDS);
@@ -95,7 +93,7 @@ public class WeatherListenerService extends WearableListenerService implements G
         mGoogleApiClient.disconnect();
 
         if (assetInputStream == null) {
-            Log.w(TAG, "Requested an unknown Asset.");
+            Log.w(getClass().getName(), getResources().getString(R.string.assetreceiveerror));
             return null;
         }
         // decode the stream into a bitmap
