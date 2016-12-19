@@ -138,7 +138,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         ImageView detail_icon;
         TextView detail_high_textview;
         TextView detail_low_textview;
-        TextView detail_location_textview;
 
         @Override
         public void onCreate(SurfaceHolder holder) {
@@ -163,7 +162,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             detail_icon = (ImageView) mView.findViewById(R.id.detail_icon);
             detail_high_textview = (TextView) mView.findViewById(R.id.detail_high_textview);
             detail_low_textview = (TextView) mView.findViewById(R.id.detail_low_textview);
-            detail_location_textview = (TextView) mView.findViewById(R.id.detail_location_textview);
         }
 
         @Override
@@ -232,7 +230,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             detail_date_textview.setText(getWeekDay(mTime.weekDay) + ", " + df.format(new Date()));
             mView.measure(specW, specH);
             mView.layout(0, 0, mView.getMeasuredWidth(), mView.getMeasuredHeight());
-            canvas.drawColor(getResources().getColor(R.color.accent));
+            canvas.drawColor(getResources().getColor(R.color.primary));
             canvas.translate(mXOffset, mYOffset);
             mView.draw(canvas);
         }
