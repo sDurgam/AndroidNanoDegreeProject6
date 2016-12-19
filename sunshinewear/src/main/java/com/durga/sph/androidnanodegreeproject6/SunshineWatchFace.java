@@ -113,7 +113,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private final BroadcastReceiver mWeatherUpdateReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d("this", intent.getAction() + ", intent...");
                 if(intent.getAction().equals(getResources().getString(R.string.weather_updated))) {
                     detail_high_textview.setText(intent.getStringExtra(getResources().getString(R.string.high_temp)));
                     detail_low_textview.setText(intent.getStringExtra(getResources().getString(R.string.low_temp)));
@@ -261,6 +260,8 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mRegisteredTimeZoneReceiver = true;
             IntentFilter filter = new IntentFilter(Intent.ACTION_TIMEZONE_CHANGED);
             SunshineWatchFace.this.registerReceiver(mTimeZoneReceiver, filter);
+            IntentFilter wetherUpdateFilter = new IntentFilter(getResources().getString(R.string.weather_updated));
+            SunshineWatchFace.this.registerReceiver(mWeatherUpdateReceiver, wetherUpdateFilter);
         }
 
         private void unregisterReceiver() {
@@ -269,6 +270,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             }
             mRegisteredTimeZoneReceiver = false;
             SunshineWatchFace.this.unregisterReceiver(mTimeZoneReceiver);
+            SunshineWatchFace.this.unregisterReceiver(mWeatherUpdateReceiver);
         }
 
         /**

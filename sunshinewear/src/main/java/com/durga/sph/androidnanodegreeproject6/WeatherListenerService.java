@@ -51,11 +51,9 @@ public class WeatherListenerService extends WearableListenerService implements G
                 String path = event.getDataItem().getUri().getPath();
                 Log.d("Mysunshine watch face", "sunshinepath:" + path);
                 if(path.equals(Constants.WEARABLE_DATA)) {
-                    Log.d("Mysunshine watch face", dataMap.toString());
                     Bitmap bitmap = loadBitmapFromAsset(dataMap.getAsset(getResources().getString(R.string.weahter_icon_id)));
                     String highTemp = dataMap.getString(getResources().getString(R.string.high_temp));
                     String lowTemp = dataMap.getString(getResources().getString(R.string.low_temp));
-                    Log.d("listerner", "listener service" + " " + highTemp + " " + lowTemp);
                     Intent weatherUpdateIntent = new Intent(getResources().getString(R.string.weather_updated));
                     weatherUpdateIntent.putExtra(getResources().getString(R.string.low_temp), lowTemp);
                     weatherUpdateIntent.putExtra(getResources().getString(R.string.high_temp), highTemp);
